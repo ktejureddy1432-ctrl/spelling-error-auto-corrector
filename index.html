@@ -1,0 +1,938 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SpellCorrect Pro - Advanced Spelling & Grammar Checker</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --secondary: #3f37c9;
+            --success: #4cc9f0;
+            --warning: #f72585;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --gray: #6c757d;
+            --light-gray: #e9ecef;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--light);
+            color: var(--dark);
+            line-height: 1.6;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        
+        body.dark-mode {
+            background-color: #1a1a2e;
+            color: var(--light);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        header {
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            transition: background-color 0.3s;
+        }
+        
+        body.dark-mode header {
+            background-color: #16213e;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        
+        .logo i {
+            font-size: 28px;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 25px;
+        }
+        
+        nav a {
+            text-decoration: none;
+            color: var(--dark);
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        body.dark-mode nav a {
+            color: var(--light);
+        }
+        
+        nav a:hover {
+            color: var(--primary);
+        }
+        
+        .user-actions {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .theme-toggle {
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            color: var(--dark);
+            transition: color 0.3s;
+        }
+        
+        body.dark-mode .theme-toggle {
+            color: var(--light);
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border-radius: 5px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--secondary);
+        }
+        
+        .btn-outline {
+            background-color: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+        }
+        
+        .btn-outline:hover {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .hero {
+            padding: 80px 0;
+            text-align: center;
+            background: linear-gradient(135deg, rgba(67, 97, 238, 0.1) 0%, rgba(79, 55, 201, 0.1) 100%);
+        }
+        
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            color: var(--primary);
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto 30px;
+            color: var(--gray);
+        }
+        
+        .hero-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .features {
+            padding: 80px 0;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+        
+        .section-title h2 {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            color: var(--primary);
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        
+        .feature-card {
+            background-color: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s, box-shadow 0.3s;
+            height: 100%;
+        }
+        
+        body.dark-mode .feature-card {
+            background-color: #0f3460;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .feature-icon {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 20px;
+        }
+        
+        .feature-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+        
+        .editor-section {
+            padding: 80px 0;
+            background-color: white;
+        }
+        
+        body.dark-mode .editor-section {
+            background-color: #16213e;
+        }
+        
+        .editor-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-top: 40px;
+        }
+        
+        .editor-panel {
+            background-color: var(--light-gray);
+            border-radius: 10px;
+            padding: 20px;
+            height: 500px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        body.dark-mode .editor-panel {
+            background-color: #0f3460;
+        }
+        
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        body.dark-mode .panel-header {
+            border-bottom-color: #444;
+        }
+        
+        .panel-title {
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+        
+        .editor-textarea {
+            flex-grow: 1;
+            border: none;
+            background-color: white;
+            border-radius: 5px;
+            padding: 15px;
+            font-size: 16px;
+            resize: none;
+            outline: none;
+            transition: background-color 0.3s;
+        }
+        
+        body.dark-mode .editor-textarea {
+            background-color: #1a1a2e;
+            color: var(--light);
+        }
+        
+        .editor-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .editor-actions .btn {
+            padding: 8px 15px;
+            font-size: 14px;
+        }
+        
+        .suggestions-panel {
+            background-color: var(--light-gray);
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 30px;
+        }
+        
+        body.dark-mode .suggestions-panel {
+            background-color: #0f3460;
+        }
+        
+        .suggestion-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        body.dark-mode .suggestion-item {
+            border-bottom-color: #444;
+        }
+        
+        .suggestion-item:last-child {
+            border-bottom: none;
+        }
+        
+        .suggestion-text {
+            flex-grow: 1;
+        }
+        
+        .suggestion-type {
+            font-size: 12px;
+            padding: 3px 8px;
+            border-radius: 20px;
+            margin-right: 10px;
+        }
+        
+        .type-spelling {
+            background-color: rgba(247, 37, 133, 0.1);
+            color: var(--warning);
+        }
+        
+        .type-grammar {
+            background-color: rgba(67, 97, 238, 0.1);
+            color: var(--primary);
+        }
+        
+        .type-style {
+            background-color: rgba(76, 201, 240, 0.1);
+            color: var(--success);
+        }
+        
+        .suggestion-action {
+            display: flex;
+            gap: 5px;
+        }
+        
+        .icon-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--gray);
+            font-size: 16px;
+            transition: color 0.3s;
+        }
+        
+        .icon-btn:hover {
+            color: var(--primary);
+        }
+        
+        .stats-section {
+            padding: 80px 0;
+            background-color: var(--light-gray);
+        }
+        
+        body.dark-mode .stats-section {
+            background-color: #0f3460;
+        }
+        
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+        }
+        
+        .stat-card {
+            background-color: white;
+            border-radius: 10px;
+            padding: 25px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        body.dark-mode .stat-card {
+            background-color: #16213e;
+        }
+        
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+        
+        .stat-label {
+            color: var(--gray);
+        }
+        
+        footer {
+            background-color: var(--dark);
+            color: white;
+            padding: 60px 0 30px;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+        
+        .footer-column h3 {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+        
+        .footer-column h3::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 50px;
+            height: 2px;
+            background-color: var(--primary);
+        }
+        
+        .footer-column ul {
+            list-style: none;
+        }
+        
+        .footer-column ul li {
+            margin-bottom: 10px;
+        }
+        
+        .footer-column ul li a {
+            color: #bbb;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-column ul li a:hover {
+            color: var(--primary);
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .social-links a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+            transition: background-color 0.3s;
+        }
+        
+        .social-links a:hover {
+            background-color: var(--primary);
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: #bbb;
+            font-size: 14px;
+        }
+        
+        .notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: var(--primary);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 5px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transform: translateY(100px);
+            opacity: 0;
+            transition: transform 0.3s, opacity 0.3s;
+            z-index: 1000;
+        }
+        
+        .notification.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .editor-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .hero-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .hero-buttons .btn {
+                width: 200px;
+            }
+            
+            nav ul {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container header-content">
+            <div class="logo">
+                <i class="fas fa-spell-check"></i>
+                <span>SpellCorrect Pro</span>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#features">Features</a></li>
+                    <li><a href="#editor">Editor</a></li>
+                    <li><a href="#pricing">Pricing</a></li>
+                    <li><a href="#resources">Resources</a></li>
+                </ul>
+            </nav>
+            <div class="user-actions">
+                <button class="theme-toggle" id="theme-toggle">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <a href="#" class="btn btn-outline">Log In</a>
+                <a href="#" class="btn btn-primary">Sign Up</a>
+            </div>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <h1>Advanced Spelling & Grammar Checker</h1>
+            <p>Elevate your writing with our intelligent autocorrect technology. Fix spelling errors, improve grammar, and enhance your writing style in real-time.</p>
+            <div class="hero-buttons">
+                <a href="#editor" class="btn btn-primary">Try It Now</a>
+                <a href="#features" class="btn btn-outline">Explore Features</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="features" id="features">
+        <div class="container">
+            <div class="section-title">
+                <h2>Powerful Features</h2>
+                <p>Everything you need to perfect your writing</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-spell-check"></i>
+                    </div>
+                    <h3>Intelligent Spell Check</h3>
+                    <p>Advanced spell checking that understands context and provides accurate suggestions for misspelled words.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-grammar"></i>
+                    </div>
+                    <h3>Grammar Correction</h3>
+                    <p>Detect and fix grammar mistakes, punctuation errors, and sentence structure issues with AI-powered analysis.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-language"></i>
+                    </div>
+                    <h3>Multi-Language Support</h3>
+                    <p>Check spelling and grammar in multiple languages including English, Spanish, French, German, and more.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-file-alt"></i>
+                    </div>
+                    <h3>Document Management</h3>
+                    <p>Upload, edit, and export documents in various formats. Save your work and access it from anywhere.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3>Writing Analytics</h3>
+                    <p>Get detailed insights about your writing style, readability score, vocabulary usage, and more.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-magic"></i>
+                    </div>
+                    <h3>Style Enhancements</h3>
+                    <p>Improve clarity, conciseness, and tone with AI-powered style suggestions tailored to your audience.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="editor-section" id="editor">
+        <div class="container">
+            <div class="section-title">
+                <h2>Try Our Editor</h2>
+                <p>Experience the power of SpellCorrect Pro with our interactive editor</p>
+            </div>
+            <div class="editor-container">
+                <div class="editor-panel">
+                    <div class="panel-header">
+                        <div class="panel-title">Original Text</div>
+                        <div>
+                            <button class="icon-btn" title="Clear"><i class="fas fa-eraser"></i></button>
+                            <button class="icon-btn" title="Upload"><i class="fas fa-upload"></i></button>
+                        </div>
+                    </div>
+                    <textarea class="editor-textarea" placeholder="Type or paste your text here...">Ths is an exampel of text with speling erors and gramatical mistakes. It demostrates how our advanced autocorect technology can help you improve your writing quality and efectiveness.</textarea>
+                    <div class="editor-actions">
+                        <button class="btn btn-primary" id="check-text">Check Text</button>
+                        <button class="btn btn-outline">Voice Input</button>
+                    </div>
+                </div>
+                <div class="editor-panel">
+                    <div class="panel-header">
+                        <div class="panel-title">Corrected Text</div>
+                        <div>
+                            <button class="icon-btn" title="Copy"><i class="fas fa-copy"></i></button>
+                            <button class="icon-btn" title="Download"><i class="fas fa-download"></i></button>
+                        </div>
+                    </div>
+                    <textarea class="editor-textarea" readonly>This is an example of text with spelling errors and grammatical mistakes. It demonstrates how our advanced autocorrect technology can help you improve your writing quality and effectiveness.</textarea>
+                    <div class="editor-actions">
+                        <button class="btn btn-primary" id="apply-all">Apply All Changes</button>
+                        <button class="btn btn-outline">Export</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="suggestions-panel">
+                <h3>Suggestions</h3>
+                <div class="suggestion-item">
+                    <div class="suggestion-text">
+                        <span class="suggestion-type type-spelling">Spelling</span>
+                        "Ths" → "This"
+                    </div>
+                    <div class="suggestion-action">
+                        <button class="icon-btn" title="Accept"><i class="fas fa-check"></i></button>
+                        <button class="icon-btn" title="Ignore"><i class="fas fa-times"></i></button>
+                    </div>
+                </div>
+                <div class="suggestion-item">
+                    <div class="suggestion-text">
+                        <span class="suggestion-type type-spelling">Spelling</span>
+                        "exampel" → "example"
+                    </div>
+                    <div class="suggestion-action">
+                        <button class="icon-btn" title="Accept"><i class="fas fa-check"></i></button>
+                        <button class="icon-btn" title="Ignore"><i class="fas fa-times"></i></button>
+                    </div>
+                </div>
+                <div class="suggestion-item">
+                    <div class="suggestion-text">
+                        <span class="suggestion-type type-spelling">Spelling</span>
+                        "speling" → "spelling"
+                    </div>
+                    <div class="suggestion-action">
+                        <button class="icon-btn" title="Accept"><i class="fas fa-check"></i></button>
+                        <button class="icon-btn" title="Ignore"><i class="fas fa-times"></i></button>
+                    </div>
+                </div>
+                <div class="suggestion-item">
+                    <div class="suggestion-text">
+                        <span class="suggestion-type type-grammar">Grammar</span>
+                        "erors" → "errors"
+                    </div>
+                    <div class="suggestion-action">
+                        <button class="icon-btn" title="Accept"><i class="fas fa-check"></i></button>
+                        <button class="icon-btn" title="Ignore"><i class="fas fa-times"></i></button>
+                    </div>
+                </div>
+                <div class="suggestion-item">
+                    <div class="suggestion-text">
+                        <span class="suggestion-type type-grammar">Grammar</span>
+                        "gramatical" → "grammatical"
+                    </div>
+                    <div class="suggestion-action">
+                        <button class="icon-btn" title="Accept"><i class="fas fa-check"></i></button>
+                        <button class="icon-btn" title="Ignore"><i class="fas fa-times"></i></button>
+                    </div>
+                </div>
+                <div class="suggestion-item">
+                    <div class="suggestion-text">
+                        <span class="suggestion-type type-style">Style</span>
+                        Consider replacing "demostrates" with "demonstrates"
+                    </div>
+                    <div class="suggestion-action">
+                        <button class="icon-btn" title="Accept"><i class="fas fa-check"></i></button>
+                        <button class="icon-btn" title="Ignore"><i class="fas fa-times"></i></button>
+                    </div>
+                </div>
+                <div class="suggestion-item">
+                    <div class="suggestion-text">
+                        <span class="suggestion-type type-style">Style</span>
+                        Consider replacing "autocorect" with "autocorrect"
+                    </div>
+                    <div class="suggestion-action">
+                        <button class="icon-btn" title="Accept"><i class="fas fa-check"></i></button>
+                        <button class="icon-btn" title="Ignore"><i class="fas fa-times"></i></button>
+                    </div>
+                </div>
+                <div class="suggestion-item">
+                    <div class="suggestion-text">
+                        <span class="suggestion-type type-style">Style</span>
+                        Consider replacing "efectiveness" with "effectiveness"
+                    </div>
+                    <div class="suggestion-action">
+                        <button class="icon-btn" title="Accept"><i class="fas fa-check"></i></button>
+                        <button class="icon-btn" title="Ignore"><i class="fas fa-times"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="stats-section">
+        <div class="container">
+            <div class="section-title">
+                <h2>Writing Statistics</h2>
+                <p>Detailed insights about your text</p>
+            </div>
+            <div class="stats-container">
+                <div class="stat-card">
+                    <div class="stat-value">28</div>
+                    <div class="stat-label">Words</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">2</div>
+                    <div class="stat-label">Sentences</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">8</div>
+                    <div class="stat-label">Issues Found</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">12.4</div>
+                    <div class="stat-label">Reading Time (sec)</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">8.2</div>
+                    <div class="stat-label">Readability Score</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">B2</div>
+                    <div class="stat-label">CEFR Level</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>SpellCorrect Pro</h3>
+                    <p>Advanced spelling and grammar checking technology to help you write with confidence.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                <div class="footer-column">
+                    <h3>Product</h3>
+                    <ul>
+                        <li><a href="#">Features</a></li>
+                        <li><a href="#">Pricing</a></li>
+                        <li><a href="#">API</a></li>
+                        <li><a href="#">Integrations</a></li>
+                        <li><a href="#">Updates</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Resources</h3>
+                    <ul>
+                        <li><a href="#">Documentation</a></li>
+                        <li><a href="#">Tutorials</a></li>
+                        <li><a href="#">Blog</a></li>
+                        <li><a href="#">Community</a></li>
+                        <li><a href="#">Support</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Company</h3>
+                    <ul>
+                        <li><a href="#">About Us</a></li>
+                        <li><a href="#">Careers</a></li>
+                        <li><a href="#">Contact</a></li>
+                        <li><a href="#">Partners</a></li>
+                        <li><a href="#">Press</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2023 SpellCorrect Pro. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <div class="notification" id="notification">
+        Changes applied successfully!
+    </div>
+
+    <script>
+        // Theme Toggle
+        const themeToggle = document.getElementById('theme-toggle');
+        const body = document.body;
+        const themeIcon = themeToggle.querySelector('i');
+        
+        themeToggle.addEventListener('click', () => {
+            body.classList.toggle('dark-mode');
+            
+            if (body.classList.contains('dark-mode')) {
+                themeIcon.classList.remove('fa-moon');
+                themeIcon.classList.add('fa-sun');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                themeIcon.classList.remove('fa-sun');
+                themeIcon.classList.add('fa-moon');
+                localStorage.setItem('theme', 'light');
+            }
+        });
+        
+        // Check for saved theme preference
+        if (localStorage.getItem('theme') === 'dark') {
+            body.classList.add('dark-mode');
+            themeIcon.classList.remove('fa-moon');
+            themeIcon.classList.add('fa-sun');
+        }
+        
+        // Check Text Button
+        const checkTextBtn = document.getElementById('check-text');
+        const originalTextarea = document.querySelector('.editor-textarea');
+        const correctedTextarea = document.querySelectorAll('.editor-textarea')[1];
+        
+        checkTextBtn.addEventListener('click', () => {
+            // Simulate text checking
+            showNotification('Checking text for errors...');
+            
+            setTimeout(() => {
+                showNotification('Text analysis complete!');
+            }, 1500);
+        });
+        
+        // Apply All Changes Button
+        const applyAllBtn = document.getElementById('apply-all');
+        
+        applyAllBtn.addEventListener('click', () => {
+            // Simulate applying all changes
+            showNotification('Applying all changes...');
+            
+            setTimeout(() => {
+                showNotification('All changes applied successfully!');
+            }, 1000);
+        });
+        
+        // Notification System
+        function showNotification(message) {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+        
+        // Suggestion Actions
+        const acceptButtons = document.querySelectorAll('.fa-check');
+        const ignoreButtons = document.querySelectorAll('.fa-times');
+        
+        acceptButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const suggestionItem = button.closest('.suggestion-item');
+                suggestionItem.style.opacity = '0.5';
+                button.style.color = 'var(--success)';
+                showNotification('Suggestion accepted');
+            });
+        });
+        
+        ignoreButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const suggestionItem = button.closest('.suggestion-item');
+                suggestionItem.style.opacity = '0.5';
+                button.style.color = 'var(--warning)';
+                showNotification('Suggestion ignored');
+            });
+        });
+        
+        // Copy Button
+        const copyButton = document.querySelector('.fa-copy');
+        
+        copyButton.addEventListener('click', () => {
+            correctedTextarea.select();
+            document.execCommand('copy');
+            showNotification('Text copied to clipboard!');
+        });
+        
+        // Smooth Scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>
